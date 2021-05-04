@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina4_0" orientation="portrait" appearance="light"/>
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -12,20 +12,20 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view autoresizesSubviews="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xgc-Bq-Jc8" userLabel="Logo view">
-                                <rect key="frame" x="60" y="143" width="200" height="282.5"/>
+                                <rect key="frame" x="60" y="226" width="255" height="360"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Icon" translatesAutoresizingMaskIntoConstraints="NO" id="Qnw-HU-x9Z">
-                                        <rect key="frame" x="10" y="10" width="180" height="180"/>
+                                        <rect key="frame" x="10" y="10" width="235" height="235"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Qnw-HU-x9Z" secondAttribute="height" multiplier="1:1" id="A8i-JW-riw"/>
                                         </constraints>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Instagrid" translatesAutoresizingMaskIntoConstraints="NO" id="3Ej-dJ-Fho">
-                                        <rect key="frame" x="10" y="210" width="180" height="62.5"/>
+                                        <rect key="frame" x="10" y="265" width="235" height="85"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.76160806420000005" green="0.86267644170000002" blue="0.91467720269999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -70,6 +70,6 @@
     </scenes>
     <resources>
         <image name="Icon" width="60" height="60"/>
-        <image name="Instagrid" width="41.5" height="13"/>
+        <image name="Instagrid" width="41.333332061767578" height="13"/>
     </resources>
 </document>
