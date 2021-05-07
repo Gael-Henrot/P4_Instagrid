@@ -24,10 +24,20 @@ import UIKit
 
 class ViewController: UIViewController {
     
-//    @IBOutlet weak var firstLayoutButton: UIButton?
+//    Declaration of pattern selector buttons
+    @IBOutlet weak var Pattern12Button: UIButton?
+    @IBOutlet weak var Pattern21Button: UIButton?
+    @IBOutlet weak var Pattern22Button: UIButton?
+    
+//    Declaration of image selector buttons
+    @IBOutlet weak var upLeftButton: UIButton?
+    @IBOutlet weak var upRightButton: UIButton?
+    @IBOutlet weak var downLeftButton: UIButton?
+    @IBOutlet weak var downRightButton: UIButton?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        changePattern(pattern: .pattern21)
         
 //        firstLayoutButton?.setTitle("toto", for: .normal)
         
@@ -39,10 +49,48 @@ class ViewController: UIViewController {
         } else {
             // Pas meme bouton
         }
+    }*/
+    enum PatternType {
+        case pattern12, pattern21, pattern22
     }
     
-    private func buttonSelected(buttonSelected: UIButton) {
+    func changePattern(pattern: PatternType) {
         
-    }*/
+//        upLeftButton?.isHidden = false
+        upRightButton?.isHidden = false
+//        downLeftButton?.isHidden = false
+        downRightButton?.isHidden = false
+        Pattern12Button?.isSelected = false
+        Pattern21Button?.isSelected = false
+        Pattern22Button?.isSelected = false
+        
+        switch pattern {
+        
+        case .pattern12:
+            upRightButton?.isHidden = true
+            Pattern12Button?.isSelected = true
+        
+        case .pattern21:
+            downRightButton?.isHidden = true
+            Pattern21Button?.isSelected = true
+        
+        case .pattern22:
+            Pattern22Button?.isSelected = true
+        }
+    }
+    
+    @IBAction func didTapPattern12() {
+        changePattern(pattern: .pattern12)
+    }
+    
+    @IBAction func didTapPattern21() {
+        changePattern(pattern: .pattern21)
+        
+    }
+    
+    @IBAction func didTapPattern22() {
+        changePattern(pattern: .pattern22)
+    }
+    
 
 }
