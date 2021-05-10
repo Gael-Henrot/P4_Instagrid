@@ -22,7 +22,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    //=======================================
+    //MARK: Outlet buttons declaration
+    //=======================================
     
 //    Declaration of pattern selector buttons
     @IBOutlet weak var Pattern12Button: UIButton?
@@ -37,11 +41,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        changePattern(pattern: .pattern21)
+        changePattern(pattern: .pattern21) // Define the default view
         
 //        firstLayoutButton?.setTitle("toto", for: .normal)
         
     }
+    
+    //=======================================
+    //MARK: Pattern selector
+    //=======================================
     
    /* @IBAction func imageButtonSelected(_ sender: UIButton) {
         if sender == firstLayoutButton {
@@ -53,7 +61,7 @@ class ViewController: UIViewController {
     enum PatternType {
         case pattern12, pattern21, pattern22
     }
-    
+    /// This function change the pattern of the middle view
     func changePattern(pattern: PatternType) {
         
 //        upLeftButton?.isHidden = false
@@ -92,5 +100,42 @@ class ViewController: UIViewController {
         changePattern(pattern: .pattern22)
     }
     
+    //=======================================
+    //MARK: Choose a photo
+    //=======================================
+    
+    @IBAction func upLeftChooseAPhoto(_ sender: Any) {
+        chooseAPhoto()
+    }
+    
+    func chooseAPhoto() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        
+        let chooseAPhotoActionSheet = UIAlertController(title: "Photo Source", message: "Choose a source of photo", preferredStyle: .actionSheet)
+        
+        chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action:UIAlertAction) in
+        imagePickerController.sourceType = .camera
+        self.present(imagePickerController, animated: true, completion: nil)
+        }))
+        
+        chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Library", style: .default, handler: { (action:UIAlertAction) in
+        imagePickerController.sourceType = .photoLibrary
+        self.present(imagePickerController, animated: true, completion: nil)
+        }))
+        
+        chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        self.present(chooseAPhotoActionSheet, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        upLeftButton?.setImage(image, for: .normal)
+        picker.dismiss(animated: true, completion: nil)
+    }
+    /*func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }*/
 
 }
