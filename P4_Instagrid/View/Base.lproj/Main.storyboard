@@ -39,7 +39,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5x1-uK-fb4" userLabel="Pattern">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5x1-uK-fb4" userLabel="Grid">
                                 <rect key="frame" x="48.666666666666657" y="275.66666666666663" width="292.66666666666674" height="292.66666666666663"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="J0x-SL-mCb" userLabel="Pattern Stack View">
@@ -48,10 +48,9 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="unH-4m-881" userLabel="Up Stack View">
                                                 <rect key="frame" x="0.0" y="0.0" width="272.66666666666669" height="131.33333333333334"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4I-QE-I9p" userLabel="UpLeftButton">
+                                                    <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4I-QE-I9p" userLabel="UpLeftButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="131.33333333333334" height="131.33333333333334"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <size key="titleShadowOffset" width="0.0" height="2"/>
                                                         <state key="normal" image="Plus"/>
                                                         <connections>
                                                             <action selector="upLeftChooseAPhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SKz-Dq-ruT"/>
@@ -61,6 +60,9 @@
                                                         <rect key="frame" x="141.33333333333331" y="0.0" width="131.33333333333331" height="131.33333333333334"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" image="Plus"/>
+                                                        <connections>
+                                                            <action selector="upRightChooseAPhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lC8-5q-YKE"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                             </stackView>
@@ -71,11 +73,17 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="131.33333333333334" height="131.33333333333334"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" image="Plus"/>
+                                                        <connections>
+                                                            <action selector="downLeftChooseAPhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ydN-ld-ihW"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MBy-OP-sAw" userLabel="DownRightButton">
                                                         <rect key="frame" x="141.33333333333331" y="0.0" width="131.33333333333331" height="131.33333333333334"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" image="Plus"/>
+                                                        <connections>
+                                                            <action selector="downRightChooseAPhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JcI-Zo-uWl"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                             </stackView>
@@ -155,6 +163,7 @@
                         <outlet property="Pattern22Button" destination="8cY-Zb-ocd" id="Cfp-cx-ZS1"/>
                         <outlet property="downLeftButton" destination="Sio-fA-lIA" id="1mU-Ns-Q9Z"/>
                         <outlet property="downRightButton" destination="MBy-OP-sAw" id="4Tp-WR-41P"/>
+                        <outlet property="grid" destination="5x1-uK-fb4" id="Una-Lp-xsV"/>
                         <outlet property="upLeftButton" destination="b4I-QE-I9p" id="5Bm-D4-m4L"/>
                         <outlet property="upRightButton" destination="65y-38-j0d" id="uTq-TV-3mR"/>
                     </connections>
