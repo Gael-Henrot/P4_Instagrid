@@ -46,6 +46,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         changePattern(pattern: .pattern21) // Define the default view
         
+//        Initialization of the share gesture to moving the grid
         let shareGesture = UIPanGestureRecognizer(target: self, action: #selector(dragTheGrid(_:)))
         grid.addGestureRecognizer(shareGesture)
 
@@ -60,10 +61,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //MARK: Pattern selector
     //=======================================
     
+//    Enumarate the pattern cases of the grid
     enum PatternType {
         case pattern12, pattern21, pattern22
     }
-    /// This function change the pattern of the middle view
+    /// This function change the pattern of the middle view by hidden or not the buttons in the grid
     func changePattern(pattern: PatternType) {
         
 //        upLeftButton?.isHidden = false
@@ -172,7 +174,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //Declaration of plus buttons actions
     @IBAction func upLeftChooseAPhoto(_ sender: UIButton) {
         chooseAPhoto()
-//        sender.backgroundImage(for: .normal) = imageChoosed
         sender.setImage(imageChoosed, for: .normal)
     }
 
@@ -196,37 +197,100 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //MARK: Share the grid
     //=======================================
     
+    var isLandscape: Bool?
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
+        case (.compact, .compact):
+            isLandscape = true
+        case (.regular, .compact):
+            isLandscape = true
+        case (.compact, .regular):
+            isLandscape = false
+        default: break
+        }
+
+    }
+    
     @objc func dragTheGrid(_ sender: UIPanGestureRecognizer) {
         // think to add a condition (only use .up direction if the device is portrait and .left if the device is landscape)
         switch sender.state {
         case .began, .changed:
-            moveUpTheGrid(gesture: sender)
+            moveTheGrid(gesture: sender)
         case .ended, .cancelled:
             slideAndHideTheGrid(gesture: sender)
+            shareTheGrid()
+//            moveBackTheGrid()
         default:
             break
         }
     }
-    /// moveUpTheGrid function allows the user to move up and down the grid
-    private func moveUpTheGrid(gesture: UIPanGestureRecognizer) {
+    /// This function allows the user to move up and down the grid.
+    private func moveTheGrid(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: grid)
-        grid.transform = CGAffineTransform(translationX: 0, y: translation.y)
+        if isLandscape == false {
+            grid.transform = CGAffineTransform(translationX: 0, y: translation.y)
+        } else {
+            grid.transform = CGAffineTransform(translationX: translation.x, y: 0)
+        }
     }
     
-    ///slideAndHideTheGrid function move the grid out of the screen in the upper non visible area if the gesture is enought
+    ///This function move the grid out of the screen in the upper non visible area.
     private func slideAndHideTheGrid(gesture: UIPanGestureRecognizer) {
-        let screenHeight = UIScreen.main.bounds.height
-        let gridHeight = grid.bounds.height
-        let translation = gesture.translation(in: grid)
-        var translationTransform: CGAffineTransform
         
-        if translation.y < -gridHeight/5 {
-            translationTransform = CGAffineTransform(translationX: 0, y: -screenHeight)
+        var screenSize: CGFloat
+//        var gridSize: CGFloat
+//        let translation = gesture.translation(in: grid)
+        var translationTransform: CGAffineTransform
+//        let translationDirection: CGFloat
+        
+        if isLandscape == false {
+            screenSize = UIScreen.main.bounds.height
+//            gridSize = grid.bounds.height
+//            translationDirection = translation.y
+            translationTransform = CGAffineTransform(translationX: 0, y: -screenSize)
+        } else {
+            screenSize = UIScreen.main.bounds.width
+//            gridSize = grid.bounds.width
+//            translationDirection = translation.x
+            translationTransform = CGAffineTransform(translationX: -screenSize, y: 0)
+        }
+
+        
+        
+        /*if translationDirection < -gridSize/5 {
+            translationTransform = CGAffineTransform(translationX: 0, y: -screenSize)
         } else {
             translationTransform = .identity
-        }
+        }*/
         UIView.animate(withDuration: 0.4, animations: {self.grid.transform = translationTransform}, completion: nil)
     }
     
+    /// This function returns the grid to its original position.
+    private func moveBackTheGrid() {
+        let translationTransform: CGAffineTransform = .identity
+        UIView.animate(withDuration: 0.4, animations: {self.grid.transform = translationTransform}, completion: nil)
+    }
+    
+    /// This function open an Activity Controller and present the possible actions to realize  with the image of the grid.
+    func shareTheGrid() {
+        /*guard let image = imageShared.jpegData(compressionQuality: 0.8) else {
+            print("No image found")
+            return
+        }*/
+
+        let activityViewController = UIActivityViewController(activityItems: [convertTheGridToImage()], applicationActivities: nil)
+        present(activityViewController, animated: true)
+    }
+    
+    /// This function convert the grid in to a UIImage and return it.
+    func convertTheGridToImage() -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: grid.bounds.size)
+        let image = renderer.image { ctx in
+            grid.drawHierarchy(in: grid.bounds, afterScreenUpdates: true)
+        }
+        return image
+    }
 
 }
