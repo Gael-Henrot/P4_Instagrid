@@ -114,29 +114,32 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }*/
     
     func chooseAPhoto() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
         
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        
-        let chooseAPhotoActionSheet = UIAlertController(title: "Photo Source", message: "Choose a source of photo", preferredStyle: .actionSheet)
-        
-        chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action:UIAlertAction) in
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
+            
+            let chooseAPhotoActionSheet = UIAlertController(title: "Photo Source", message: "Choose a source of photo", preferredStyle: .actionSheet)
+            
+            chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action:UIAlertAction) in
                 imagePickerController.sourceType = .camera
+                self.present(imagePickerController, animated: true, completion: nil)
+            }))
+            
+            chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Library", style: .default, handler: { (action:UIAlertAction) in
+                imagePickerController.sourceType = .photoLibrary
             self.present(imagePickerController, animated: true, completion: nil)
-            } else {
-                print("Camera not available")
-            }
-        }))
-        
-        chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Library", style: .default, handler: { (action:UIAlertAction) in
+            }))
+            
+            chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            self.present(chooseAPhotoActionSheet, animated: true, completion: nil)
+        } else {
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
             imagePickerController.sourceType = .photoLibrary
-        self.present(imagePickerController, animated: true, completion: nil)
-        }))
-        
-        chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        self.present(chooseAPhotoActionSheet, animated: true, completion: nil)
+            self.present(imagePickerController, animated: true, completion: nil)
+        }
         
         /*func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
@@ -160,10 +163,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
+    var currentButton: UIButton?
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
 //        upLeftButton?.setImage(image, for: .normal)
         imageChoosed = image
+        currentButton?.setImage(imageChoosed, for: .normal)
         picker.dismiss(animated: true, completion: nil)
     }
 
@@ -173,8 +179,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     //Declaration of plus buttons actions
     @IBAction func upLeftChooseAPhoto(_ sender: UIButton) {
+        currentButton = sender
         chooseAPhoto()
-        sender.setImage(imageChoosed, for: .normal)
     }
 
     @IBAction func upRightChooseAPhoto(_ sender: UIButton) {
