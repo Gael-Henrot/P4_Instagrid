@@ -47,7 +47,7 @@
                                                                     <action selector="upLeftChooseAPhoto:" destination="lRF-Za-yZr" eventType="touchUpInside" id="FAo-AN-b2b"/>
                                                                 </connections>
                                                             </button>
-                                                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R4G-jt-hGO" userLabel="UpRightButton">
+                                                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R4G-jt-hGO" userLabel="UpRightButton">
                                                                 <rect key="frame" x="179" y="0.0" width="163.66666666666663" height="164"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <state key="normal" image="Plus"/>
@@ -60,7 +60,7 @@
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="q79-jd-vb0" userLabel="Down Stack View">
                                                         <rect key="frame" x="0.0" y="179" width="342.66666666666669" height="163.66666666666663"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QX8-w1-caf" userLabel="DownLeftButton">
+                                                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QX8-w1-caf" userLabel="DownLeftButton">
                                                                 <rect key="frame" x="0.0" y="0.0" width="164" height="163.66666666666666"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <state key="normal" image="Plus"/>
@@ -68,7 +68,7 @@
                                                                     <action selector="downLeftChooseAPhoto:" destination="lRF-Za-yZr" eventType="touchUpInside" id="KNs-08-4hL"/>
                                                                 </connections>
                                                             </button>
-                                                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nj6-zv-VYj" userLabel="DownRightButton">
+                                                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nj6-zv-VYj" userLabel="DownRightButton">
                                                                 <rect key="frame" x="179" y="0.0" width="163.66666666666663" height="163.66666666666666"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <state key="normal" image="Plus"/>
@@ -227,6 +227,7 @@
                         <outlet property="downLeftButton" destination="QX8-w1-caf" id="bCq-L3-Ukg"/>
                         <outlet property="downRightButton" destination="Nj6-zv-VYj" id="zry-Be-RXi"/>
                         <outlet property="grid" destination="KHI-V5-qAp" id="O1N-0v-Off"/>
+                        <outlet property="swipeLabel" destination="HEb-3A-14M" id="YnG-Ld-7Z1"/>
                         <outlet property="upLeftButton" destination="xcg-W3-n1d" id="QIL-6Q-6tG"/>
                         <outlet property="upRightButton" destination="R4G-jt-hGO" id="CZy-hS-Iui"/>
                     </connections>

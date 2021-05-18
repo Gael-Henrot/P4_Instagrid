@@ -41,6 +41,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
 //    Declaration of the grid
     @IBOutlet weak var grid: UIView!
+    
+//    Declaration of the swipe label
+    @IBOutlet weak var swipeLabel: UILabel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +68,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     enum PatternType {
         case pattern12, pattern21, pattern22
     }
-    /// This function change the pattern of the middle view by hidden or not the buttons in the grid
+    /// This method change the pattern of the middle view by hiding or not the buttons in the grid.
     func changePattern(pattern: PatternType) {
         
 //        upLeftButton?.isHidden = false
@@ -97,7 +100,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func didTapPattern21() {
         changePattern(pattern: .pattern21)
-        
     }
     
     @IBAction func didTapPattern22() {
@@ -108,11 +110,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //MARK: Choose a photo
     //=======================================
     
+//    Variable which store the image choosed by the user
     var imageChoosed : UIImage?
-    /*enum LocationType {
-        case upLeft, upRight, downLeft, downRight
-    }*/
     
+    /// This method allows the user to choose a photo in his library or to take a photo with his camera (by creating an UIImagePickerController and an UIAlertController).
+    /// If the camera is not available, the function open directly the library.
     func chooseAPhoto() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
         
@@ -140,36 +142,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imagePickerController.sourceType = .photoLibrary
             self.present(imagePickerController, animated: true, completion: nil)
         }
-        
-        /*func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-    //        upLeftButton?.setImage(image, for: .normal)
-            switch locationType {
-            case LocationType.upLeft:
-                upLeftButton?.setImage(image, for: .normal)
-            case LocationType.upRight:
-                upRightButton?.setImage(image, for: .normal)
-            case LocationType.downLeft:
-                downLeftButton?.setImage(image, for: .normal)
-            case LocationType.downRight:
-                downRightButton?.setImage(image, for: .normal)
-            }
-            picker.dismiss(animated: true, completion: nil)
-        }
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            picker.dismiss(animated: true, completion: nil)
-        }*/
-        
-        
     }
     
+//    Variable which store the plus buttton tapped by the user
     var currentButton: UIButton?
     
+    /// This method wait the user. When the user has chosen an image, the image is set and adjust in the current plus button.
+    /// The user can only choose a image (guarantee by the UIImagePickerController).
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+ 
         let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-//        upLeftButton?.setImage(image, for: .normal)
         imageChoosed = image
         currentButton?.setImage(imageChoosed, for: .normal)
+        currentButton?.imageView!.contentMode = .scaleAspectFill
         picker.dismiss(animated: true, completion: nil)
     }
 
@@ -184,18 +169,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
     @IBAction func upRightChooseAPhoto(_ sender: UIButton) {
+        currentButton = sender
         chooseAPhoto()
-        sender.setImage(imageChoosed, for: .normal)
     }
     
     @IBAction func downLeftChooseAPhoto(_ sender: UIButton) {
+        currentButton = sender
         chooseAPhoto()
-        sender.setImage(imageChoosed, for: .normal)
     }
     
     @IBAction func downRightChooseAPhoto(_ sender: UIButton) {
+        currentButton = sender
         chooseAPhoto()
-        sender.setImage(imageChoosed, for: .normal)
     }
     
     
@@ -279,18 +264,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         UIView.animate(withDuration: 0.4, animations: {self.grid.transform = translationTransform}, completion: nil)
     }
     
-    /// This function open an Activity Controller and present the possible actions to realize  with the image of the grid.
+    /// This method open an Activity Controller and present the possible actions to realize with the image of the grid.
     func shareTheGrid() {
-        /*guard let image = imageShared.jpegData(compressionQuality: 0.8) else {
-            print("No image found")
-            return
-        }*/
-
         let activityViewController = UIActivityViewController(activityItems: [convertTheGridToImage()], applicationActivities: nil)
         present(activityViewController, animated: true)
     }
     
-    /// This function convert the grid in to a UIImage and return it.
+    /// This method convert the grid in to a UIImage and return it.
     func convertTheGridToImage() -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: grid.bounds.size)
         let image = renderer.image { ctx in
