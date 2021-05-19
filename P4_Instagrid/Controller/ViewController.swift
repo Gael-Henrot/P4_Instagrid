@@ -25,7 +25,20 @@ import UIKit
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     //=======================================
-    //MARK: Outlet buttons declaration
+    //MARK: Variables declaration
+    //=======================================
+    
+//    Variable which contains the orientation of the device
+    var isPortrait: Bool?
+    
+//    Variable which store the image choosed by the user
+    var imageChoosed : UIImage?
+    
+//    Variable which store the current plus buttton tapped by the user
+    var currentButton: UIButton?
+    
+    //=======================================
+    //MARK: Outlets declaration
     //=======================================
     
 //    Declaration of pattern selector buttons
@@ -48,6 +61,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         changePattern(pattern: .pattern21) // Define the default view
+    
+        defineOrientation()
+        defineSwipeLabel()
         
 //        Initialization of the share gesture to moving the grid
         let shareGesture = UIPanGestureRecognizer(target: self, action: #selector(dragTheGrid(_:)))
@@ -58,6 +74,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //                shareGesture.direction = .up
 //        grid.addGestureRecognizer(shareGesture)
         
+    }
+    
+    /// This method define the orientation of the device thanks to size classes (modify the isPortrait value)
+    func defineOrientation() {
+        if traitCollection.horizontalSizeClass == .compact {
+            isPortrait = true
+        } else {
+            isPortrait = false
+        }
+    }
+    
+    /// This method change the swipe label text thanks to actual size class.
+    func defineSwipeLabel() {
+        if traitCollection.horizontalSizeClass == .compact {
+            swipeLabel?.text = "Swipe up to share"
+        } else {
+            swipeLabel?.text = "Swipe left to share"
+        }
     }
     
     //=======================================
@@ -110,16 +144,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //MARK: Choose a photo
     //=======================================
     
-//    Variable which store the image choosed by the user
-    var imageChoosed : UIImage?
-    
     /// This method allows the user to choose a photo in his library or to take a photo with his camera (by creating an UIImagePickerController and an UIAlertController).
     /// If the camera is not available, the function open directly the library.
     func chooseAPhoto() {
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
         
-            let imagePickerController = UIImagePickerController()
-            imagePickerController.delegate = self
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
             
             let chooseAPhotoActionSheet = UIAlertController(title: "Photo Source", message: "Choose a source of photo", preferredStyle: .actionSheet)
             
@@ -130,22 +161,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Library", style: .default, handler: { (action:UIAlertAction) in
                 imagePickerController.sourceType = .photoLibrary
-            self.present(imagePickerController, animated: true, completion: nil)
+                self.present(imagePickerController, animated: true, completion: nil)
             }))
             
             chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            
-            self.present(chooseAPhotoActionSheet, animated: true, completion: nil)
+                self.present(chooseAPhotoActionSheet, animated: true, completion: nil)
         } else {
-            let imagePickerController = UIImagePickerController()
-            imagePickerController.delegate = self
+            
             imagePickerController.sourceType = .photoLibrary
             self.present(imagePickerController, animated: true, completion: nil)
         }
     }
-    
-//    Variable which store the plus buttton tapped by the user
-    var currentButton: UIButton?
     
     /// This method wait the user. When the user has chosen an image, the image is set and adjust in the current plus button.
     /// The user can only choose a image (guarantee by the UIImagePickerController).
@@ -187,79 +213,66 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //=======================================
     //MARK: Share the grid
     //=======================================
-    
-    var isLandscape: Bool?
+     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
-        case (.compact, .compact):
-            isLandscape = true
-        case (.regular, .compact):
-            isLandscape = true
-        case (.compact, .regular):
-            isLandscape = false
-        default: break
-        }
-
+        defineOrientation()
+        defineSwipeLabel()
     }
     
     @objc func dragTheGrid(_ sender: UIPanGestureRecognizer) {
         // think to add a condition (only use .up direction if the device is portrait and .left if the device is landscape)
         switch sender.state {
         case .began, .changed:
-            moveTheGrid(gesture: sender)
+            moveTheGrid(sender)
         case .ended, .cancelled:
-            slideAndHideTheGrid(gesture: sender)
-            shareTheGrid()
-//            moveBackTheGrid()
+            slideAndShareTheGrid(sender)
         default:
             break
         }
     }
-    /// This function allows the user to move up and down the grid.
-    private func moveTheGrid(gesture: UIPanGestureRecognizer) {
+    /// This method allows the user to move the grid (in only one direction).
+    func moveTheGrid(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: grid)
-        if isLandscape == false {
+        if isPortrait == true {
             grid.transform = CGAffineTransform(translationX: 0, y: translation.y)
         } else {
             grid.transform = CGAffineTransform(translationX: translation.x, y: 0)
         }
     }
     
-    ///This function move the grid out of the screen in the upper non visible area.
-    private func slideAndHideTheGrid(gesture: UIPanGestureRecognizer) {
+    /// This method move the grid out of the screen in the non visible area and call the shareTheGrid method.
+    func slideAndShareTheGrid(_ gesture: UIPanGestureRecognizer) {
         
         var screenSize: CGFloat
-//        var gridSize: CGFloat
-//        let translation = gesture.translation(in: grid)
+        var gridSize: CGFloat
+        let translation = gesture.translation(in: grid)
         var translationTransform: CGAffineTransform
-//        let translationDirection: CGFloat
+        var translationTransformation: CGAffineTransform
+        let translationDirection: CGFloat
         
-        if isLandscape == false {
+        if isPortrait == true {
             screenSize = UIScreen.main.bounds.height
-//            gridSize = grid.bounds.height
-//            translationDirection = translation.y
+            gridSize = grid.bounds.height
+            translationDirection = translation.y
             translationTransform = CGAffineTransform(translationX: 0, y: -screenSize)
         } else {
             screenSize = UIScreen.main.bounds.width
-//            gridSize = grid.bounds.width
-//            translationDirection = translation.x
+            gridSize = grid.bounds.width
+            translationDirection = translation.x
             translationTransform = CGAffineTransform(translationX: -screenSize, y: 0)
         }
 
-        
-        
-        /*if translationDirection < -gridSize/5 {
-            translationTransform = CGAffineTransform(translationX: 0, y: -screenSize)
+        if translationDirection < -gridSize/5 {
+            translationTransformation = translationTransform
+            shareTheGrid()
         } else {
-            translationTransform = .identity
-        }*/
-        UIView.animate(withDuration: 0.4, animations: {self.grid.transform = translationTransform}, completion: nil)
+            translationTransformation = .identity
+        }
+        UIView.animate(withDuration: 0.4, animations: {self.grid.transform = translationTransformation}, completion: nil)
     }
     
-    /// This function returns the grid to its original position.
-    private func moveBackTheGrid() {
+    /// This method returns the grid to its original position.
+    func moveBackTheGrid() {
         let translationTransform: CGAffineTransform = .identity
         UIView.animate(withDuration: 0.4, animations: {self.grid.transform = translationTransform}, completion: nil)
     }
@@ -267,8 +280,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     /// This method open an Activity Controller and present the possible actions to realize with the image of the grid.
     func shareTheGrid() {
         let activityViewController = UIActivityViewController(activityItems: [convertTheGridToImage()], applicationActivities: nil)
-        present(activityViewController, animated: true)
-    }
+        present(activityViewController, animated: true, completion: nil)
+        
+        activityViewController.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed:
+        Bool, arrayReturnedItems: [Any]?, error: Error?) in
+            if completed {
+                self.moveBackTheGrid()
+                return
+            } else {
+                self.moveBackTheGrid()
+            }
+            if let shareError = error {
+                print("error while sharing: \(shareError.localizedDescription)")
+            }
+        }    }
     
     /// This method convert the grid in to a UIImage and return it.
     func convertTheGridToImage() -> UIImage {
