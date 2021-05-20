@@ -5,74 +5,72 @@
 //  Created by Gaël HENROT on 03/05/2021.
 //
 /*
- L'application permet de créer des petits montages carrés de 3 ou 4 photods.
+ L'application permet de créer des petits montages carrés de 3 ou 4 photos.
  1. L'utilisateur choisit une des trois dispositions
-    1.1 L'utlisateur appuie sur un des trois boutons:
-        a. La coche de l'ancienne sélection est cachée
-        b. La coche de la nouvelle sélection est affichée.
-        c. La grille centrale change pour correspondre au choix de l'utilisateur
+ 1.1 L'utilisateur appuie sur un des trois ou quatres boutons:
+ a. La coche de l'ancienne sélection est cachée
+ b. La coche de la nouvelle sélection est affichée.
+ c. La grille centrale change pour correspondre au choix de l'utilisateur
  2. L'utilisateur choisit 3 ou 4 photos
-    2.1 L'utilisateur appuie sur un plus
-    2.2 L'utilisateur choisit une photo
+ 2.1 L'utilisateur appuie sur un plus
+ 2.2 L'utilisateur choisit une photo
  3. L'utilisateur partage sa création
-    3.1 L'utilisateur glisse la grille vers le haut ou la gauche
-    3.2 La vue de partage apparait
-    3.3 L'utilisateur choisit son moyen de partage
+ 3.1 L'utilisateur glisse la grille vers le haut ou la gauche
+ 3.2 La vue de partage apparait
+ 3.3 L'utilisateur choisit son moyen de partage
+ 3.4 La grille revient à sa place d'origine
  */
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ViewController: UIViewController  {
     
     //=======================================
     //MARK: Variables declaration
     //=======================================
     
-//    Variable which contains the orientation of the device
+    //    Variable which contains the orientation of the device
     var isPortrait: Bool?
     
-//    Variable which store the image choosed by the user
-    var imageChoosed : UIImage?
-    
-//    Variable which store the current plus buttton tapped by the user
+    //    Variable which store the current plus buttton tapped by the user
     var currentButton: UIButton?
     
     //=======================================
     //MARK: Outlets declaration
     //=======================================
     
-//    Declaration of pattern selector buttons
+    //    Declaration of pattern selector buttons
     @IBOutlet weak var Pattern12Button: UIButton?
     @IBOutlet weak var Pattern21Button: UIButton?
     @IBOutlet weak var Pattern22Button: UIButton?
     
-//    Declaration of image selector buttons
+    //    Declaration of image selector buttons
     @IBOutlet weak var upLeftButton: UIButton?
     @IBOutlet weak var upRightButton: UIButton?
     @IBOutlet weak var downLeftButton: UIButton?
     @IBOutlet weak var downRightButton: UIButton?
     
-//    Declaration of the grid
+    //    Declaration of the grid
     @IBOutlet weak var grid: UIView!
     
-//    Declaration of the swipe label
+    //    Declaration of the swipe label
     @IBOutlet weak var swipeLabel: UILabel?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         changePattern(pattern: .pattern21) // Define the default view
-    
+        
         defineOrientation()
         defineSwipeLabel()
         
-//        Initialization of the share gesture to moving the grid
+        //        Initialization of the share gesture to moving the grid
         let shareGesture = UIPanGestureRecognizer(target: self, action: #selector(dragTheGrid(_:)))
         grid.addGestureRecognizer(shareGesture)
-
-//        let shareGesture = UISwipeGestureRecognizer(target: self, action: #selector(dragTheGrid(_:)))
-//                Think about changing it according to orientation
-//                shareGesture.direction = .up
-//        grid.addGestureRecognizer(shareGesture)
+        
+        //        let shareGesture = UISwipeGestureRecognizer(target: self, action: #selector(dragTheGrid(_:)))
+        //                Think about changing it according to orientation
+        //                shareGesture.direction = .up
+        //        grid.addGestureRecognizer(shareGesture)
         
     }
     
@@ -98,16 +96,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //MARK: Pattern selector
     //=======================================
     
-//    Enumarate the pattern cases of the grid
+    //    Enumarate the pattern cases of the grid
     enum PatternType {
         case pattern12, pattern21, pattern22
     }
     /// This method change the pattern of the middle view by hiding or not the buttons in the grid.
     func changePattern(pattern: PatternType) {
         
-//        upLeftButton?.isHidden = false
+        //        upLeftButton?.isHidden = false
         upRightButton?.isHidden = false
-//        downLeftButton?.isHidden = false
+        //        downLeftButton?.isHidden = false
         downRightButton?.isHidden = false
         Pattern12Button?.isSelected = false
         Pattern21Button?.isSelected = false
@@ -118,11 +116,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case .pattern12:
             upRightButton?.isHidden = true
             Pattern12Button?.isSelected = true
-        
+            
         case .pattern21:
             downRightButton?.isHidden = true
             Pattern21Button?.isSelected = true
-        
+            
         case .pattern22:
             Pattern22Button?.isSelected = true
         }
@@ -165,7 +163,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }))
             
             chooseAPhotoActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                self.present(chooseAPhotoActionSheet, animated: true, completion: nil)
+            self.present(chooseAPhotoActionSheet, animated: true, completion: nil)
         } else {
             
             imagePickerController.sourceType = .photoLibrary
@@ -173,27 +171,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    /// This method wait the user. When the user has chosen an image, the image is set and adjust in the current plus button.
-    /// The user can only choose a image (guarantee by the UIImagePickerController).
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
- 
-        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        imageChoosed = image
-        currentButton?.setImage(imageChoosed, for: .normal)
-        currentButton?.imageView!.contentMode = .scaleAspectFill
-        picker.dismiss(animated: true, completion: nil)
-    }
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
     //Declaration of plus buttons actions
     @IBAction func upLeftChooseAPhoto(_ sender: UIButton) {
         currentButton = sender
         chooseAPhoto()
     }
-
+    
     @IBAction func upRightChooseAPhoto(_ sender: UIButton) {
         currentButton = sender
         chooseAPhoto()
@@ -213,7 +196,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //=======================================
     //MARK: Share the grid
     //=======================================
-     
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         defineOrientation()
         defineSwipeLabel()
@@ -261,7 +244,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             translationDirection = translation.x
             translationTransform = CGAffineTransform(translationX: -screenSize, y: 0)
         }
-
+        
         if translationDirection < -gridSize/5 {
             translationTransformation = translationTransform
             shareTheGrid()
@@ -278,22 +261,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     /// This method open an Activity Controller and present the possible actions to realize with the image of the grid.
+    /// It call the moveBackTheGrid method when the user has done is choice.
     func shareTheGrid() {
         let activityViewController = UIActivityViewController(activityItems: [convertTheGridToImage()], applicationActivities: nil)
         present(activityViewController, animated: true, completion: nil)
         
         activityViewController.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed:
-        Bool, arrayReturnedItems: [Any]?, error: Error?) in
-            if completed {
-                self.moveBackTheGrid()
-                return
-            } else {
-                self.moveBackTheGrid()
-            }
-            if let shareError = error {
-                print("error while sharing: \(shareError.localizedDescription)")
-            }
-        }    }
+                                                                Bool, arrayReturnedItems: [Any]?, error: Error?) in
+            self.moveBackTheGrid()
+        }
+    }
     
     /// This method convert the grid in to a UIImage and return it.
     func convertTheGridToImage() -> UIImage {
@@ -303,5 +280,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         return image
     }
+    
+}
+//MARK: UIImagePickerControllerDelegate
+extension ViewController: UIImagePickerControllerDelegate {
+    
+    /// This method wait the user. When the user has chosen an image, the image is set and adjust in the current plus button.
+    /// The user can only choose a image (guarantee by the UIImagePickerController).
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        currentButton?.setImage(image, for: .normal) // Replace the previous image (plus or previously choosed image) in the current plus button
+        currentButton?.imageView!.contentMode = .scaleAspectFill // Change the content mode of the current button to
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+}
 
+//MARK: UINavigationControllerDelegate
+extension ViewController: UINavigationControllerDelegate {
+    
 }
